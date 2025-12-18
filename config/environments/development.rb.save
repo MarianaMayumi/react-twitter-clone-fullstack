@@ -1,70 +1,40 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  # Reload code on every request
-  config.cache_classes = false
+  config.enable_reloading = true
   config.eager_load = false
   config.consider_all_requests_local = true
   config.server_timing = true
 
-  # Caching
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
     config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}"
-    }
+    config.public_file_server.headers = { "Cache-Control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
     config.cache_store = :null_store
   end
 
-  # File uploads
   config.active_storage.service = :local
-
-  # Mailer
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-
-  # Deprecations
   config.active_support.deprecation = :log
   config.active_support.disallowed_deprecation = :raise
   config.active_support.disallowed_deprecation_warnings = []
-
-  # DB debugging
   config.active_record.migration_error = :page_load
   config.active_record.verbose_query_logs = true
-
-  # View debug
+  config.active_job.verbose_enqueue_logs = true
+  config.assets.quiet = true
   config.action_view.annotate_rendered_view_with_filenames = true
-
-  # Prevent missing callbacks warnings
   config.action_controller.raise_on_missing_callback_actions = true
 
-  # -------------------------------------------------------------------
-  # 🔵 CONFIGURAÇÕES PARA O FRONTEND REACT FUNCIONAR COM COOKIES
-  # -------------------------------------------------------------------
-
-  # Permite cookies SameSite=None (necessário para frontend separado)
-  config.action_dispatch.cookies_same_site_protection = :none
-
-  # Permite fetch() sem bloquear origem
-  config.action_controller.forgery_protection_origin_check = false
-
-  # Sessão compatível com React (same_site none + secure false)
-  Rails.application.config.session_store :cookie_store,
-    key: "_twitter_clone_session",
-    same_site: :none,
-    secure: false # NÃO usar true no localhost
-
-  # Permite qualquer host (necessário para testes)
-  config.hosts.clear
-
-  # Permite servir assets do webpack-dev-server
+  # --- IMPORTANTE PARA REACT FUNCIONAR ---
   config.public_file_server.enabled = true
+
   config.public_file_server.headers = {
     "Cache-Control" => "public, max-age=#{1.year.to_i}"
   }
 end
+nano config/environments/development.rbnano config/environments/development.rbnano config/environments/development.rbnano config/environments/development.rbnano config/environments/development.rb

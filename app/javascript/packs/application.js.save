@@ -1,0 +1,11 @@
+import App from '../src/App.jsx'// packs/application.js — Webpacker entry (React 17 compatible)
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from '../src/App'
+
+document.addEventListener('DOMContentLoaded', () => {
+  const node = document.getElementById('root')
+  if (node) {
+    ReactDOM.render(<App />, node)
+  }
+})

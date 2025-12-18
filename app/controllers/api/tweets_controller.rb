@@ -1,55 +1,37 @@
-module Api
-  class TweetsController < ApplicationController
-    def index
-      @tweets = Tweet.all.order(created_at: :desc)
-      render 'api/tweets/index'
-    end
+class Api::TweetsController < Api::ApplicationController
+  def index
+    tweets = Tweet.includes(:user).order(created_at: :desc)
 
-    def create
-      token = cookies.signed[:twitter_session_token]
-      session = Session.find_by(token: token)
-      user = session.user
-      @tweet = user.tweets.new(tweet_params)
+    render json: tweets.as_json(
+      include: {
+        user: { only: [:id, :username] }
+      }
+    )
+  end
 
-      if @tweet.save
-        TweetMailer.notify(@tweet).deliver!
-        render 'api/tweets/create'
-      end
-    end
+  def create
+    tweet = current_user.tweets.build(tweet_params)
 
-    def destroy
-      token = cookies.signed[:twitter_session_token]
-      session = Session.find_by(token: token)
-
-      return render json: { success: false } unless session
-
-      user = session.user
-      tweet = Tweet.find_by(id: params[:id])
-
-      if tweet && (tweet.user == user) && tweet.destroy
-        render json: {
-          success: true
+    if tweet.save
+      render json: tweet.as_json(
+        include: {
+          user: { only: [:id, :username] }
         }
-      else
-        render json: {
-          success: false
-        }
-      end
+      ), status: :created
+    else
+      render json: { errors: tweet.errors.full_messages }, status: :unprocessable_entity
     end
+  end
 
-    def index_by_user
-      user = User.find_by(username: params[:username])
+  def destroy
+    tweet = current_user.tweets.find(params[:id])
+    tweet.destroy
+    head :no_content
+  end
 
-      if user
-        @tweets = user.tweets
-        render 'api/tweets/index'
-      end
-    end
+  private
 
-    private
-
-    def tweet_params
-      params.require(:tweet).permit(:message, :image)
-    end
+  def tweet_params
+    params.require(:tweet).permit(:content)
   end
 end

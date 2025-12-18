@@ -1,0 +1,15 @@
+<h2>Login</h2>
+
+<form action="/login" method="post">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+  <input type="email" name="email" placeholder="Email">
+  <input type="password" name="password" placeholder="Password">
+
+  <button type="submit">Login</button>
+</form>
+
+<p>
+  Não tem conta?
+  <a href="/signup">Criar conta</a>
+</p>

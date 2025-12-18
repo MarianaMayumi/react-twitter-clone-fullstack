@@ -1,8 +1,6 @@
 class Tweet < ApplicationRecord
   belongs_to :user
 
-  validates :user, presence: true
-  validates :message, presence: true, length: { maximum: 140 }
-
-  has_one_attached :image
+  # Ajuste: agora usamos :content e não mais :message
+  validates :content, presence: true, length: { maximum: 280 }
 end
