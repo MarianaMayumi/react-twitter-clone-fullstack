@@ -24,7 +24,6 @@
     "webpack-dev-server": "^3"
   },
   "scripts": {
-    "build": "webpack --config config/webpack/production.js",
-    "heroku-postbuild": "bundle exec rails assets:precompile"
+    "build": "webpack --config config/webpack/production.js"
   }
 }
