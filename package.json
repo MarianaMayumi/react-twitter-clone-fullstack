@@ -2,11 +2,8 @@
   "name": "full-stack-twitter-clone",
   "private": true,
   "engines": {
-    "node": "^16.17"
-  },
-  "scripts": {
-    "build": "webpack --mode production",
-    "heroku-postbuild": "yarn install --production=false && yarn build"
+    "node": "16.x",
+    "yarn": "1.x"
   },
   "dependencies": {
     "@babel/preset-react": "^7.16.7",
@@ -25,5 +22,9 @@
   },
   "devDependencies": {
     "webpack-dev-server": "^3"
+  },
+  "scripts": {
+    "build": "webpack --config config/webpack/production.js",
+    "heroku-postbuild": "bundle exec rails assets:precompile"
   }
 }
